@@ -1,7 +1,7 @@
-package com.example.expensetracker.service;
+package com.example.expensetracker.expense.service;
 
-import com.example.expensetracker.dto.ExpenseRequestDto;
-import com.example.expensetracker.dto.ExpenseResponseDto;
+import com.example.expensetracker.expense.dto.ExpenseRequestDto;
+import com.example.expensetracker.expense.dto.ExpenseResponseDto;
 
 import java.util.List;
 

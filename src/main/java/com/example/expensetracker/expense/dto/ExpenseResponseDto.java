@@ -1,4 +1,4 @@
-package com.example.expensetracker.dto;
+package com.example.expensetracker.expense.dto;
 
 import lombok.*;
 
