@@ -1,9 +1,8 @@
-package com.example.expensetracker.controller;
+package com.example.expensetracker.expense.controller;
 
-import com.example.expensetracker.dto.ExpenseRequestDto;
-import com.example.expensetracker.dto.ExpenseResponseDto;
-import com.example.expensetracker.model.Expense;
-import com.example.expensetracker.service.ExpenseService;
+import com.example.expensetracker.expense.dto.ExpenseRequestDto;
+import com.example.expensetracker.expense.dto.ExpenseResponseDto;
+import com.example.expensetracker.expense.service.ExpenseService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;

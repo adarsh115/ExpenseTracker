@@ -1,10 +1,10 @@
-package com.example.expensetracker.service;
+package com.example.expensetracker.expense.service;
 
-import com.example.expensetracker.dto.ExpenseRequestDto;
-import com.example.expensetracker.dto.ExpenseResponseDto;
+import com.example.expensetracker.expense.dto.ExpenseRequestDto;
+import com.example.expensetracker.expense.dto.ExpenseResponseDto;
 import com.example.expensetracker.exception.ResourceNotFoundException;
-import com.example.expensetracker.model.Expense;
-import com.example.expensetracker.repository.ExpenseRepository;
+import com.example.expensetracker.expense.model.Expense;
+import com.example.expensetracker.expense.repository.ExpenseRepository;
 import org.springframework.stereotype.Service;
 
 import org.slf4j.Logger;
