@@ -30,12 +30,18 @@ public class ListingServiceImpl implements ListingService{
     }
 
     @Override
-    public PagedResponse<ExpenseResponseDto> getPagedExpense(int page, int size
-    ){
+    public PagedResponse<ExpenseResponseDto> getPagedExpense(int page, int size) {
         long total = expenseRepository.count();
+
+        if (total == 0) {
+            logger.warn("User requested page {}, but no expenses exist in database", page);
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT, "No expenses exist yet");
+        }
+
         int maxPages = (int) Math.ceil((double) total / size);
 
         if (page < 0 || page >= maxPages) {
+            logger.error("User requested out-of-bound page index {}. Valid range: 0 to {}", page, maxPages - 1);
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,
                     "Page index out of bounds. Valid range: 0 to " + (maxPages - 1));
         }
@@ -44,18 +50,16 @@ public class ListingServiceImpl implements ListingService{
         Page<Expense> expensePage = expenseRepository.findAll(pageable);
 
         if (expensePage.isEmpty()) {
-            logger.warn("User requested empty page: {}", page);
+            logger.warn("User requested page {}, but no expenses found after filters", page);
             throw new ResponseStatusException(HttpStatus.NO_CONTENT, "No expenses found for page " + page);
         }
 
-
-        List<ExpenseResponseDto> content = expensePage
-                .getContent()
+        List<ExpenseResponseDto> content = expensePage.getContent()
                 .stream()
                 .map(ExpenseMapper::toDto)
                 .toList();
 
-        PagedResponse<ExpenseResponseDto> response = new PagedResponse<>(
+        return new PagedResponse<>(
                 content,
                 expensePage.getNumber(),
                 expensePage.getSize(),
@@ -63,7 +67,5 @@ public class ListingServiceImpl implements ListingService{
                 expensePage.getTotalElements(),
                 expensePage.isLast()
         );
-
-        return response;
     }
 }
