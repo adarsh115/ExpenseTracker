@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 @Service
 public class ExpenseServiceImpl implements ExpenseService{
+
     private final ExpenseRepository expenseRepository;
     private static final Logger logger = LoggerFactory.getLogger(ExpenseServiceImpl.class);
 
@@ -25,6 +26,7 @@ public class ExpenseServiceImpl implements ExpenseService{
     @Override
     public List<ExpenseResponseDto> getAllExpenses() {
         List<Expense> expenses = expenseRepository.findAll();
+        logger.info("HELLOL");
         return expenses.stream()
                 .map(ExpenseMapper::toDto)
                 .toList();
