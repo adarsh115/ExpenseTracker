@@ -18,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -54,6 +55,48 @@ public class ListingServiceImpl implements ListingService{
             throw new ResponseStatusException(HttpStatus.NO_CONTENT, "No expenses found for page " + page);
         }
 
+        List<ExpenseResponseDto> content = expensePage.getContent()
+                .stream()
+                .map(ExpenseMapper::toDto)
+                .toList();
+
+        return new PagedResponse<>(
+                content,
+                expensePage.getNumber(),
+                expensePage.getSize(),
+                expensePage.getTotalPages(),
+                expensePage.getTotalElements(),
+                expensePage.isLast()
+        );
+    }
+
+
+    @Override
+    public PagedResponse<ExpenseResponseDto> getFilteredExpenses(int page, int size, String category, LocalDate startDate, LocalDate endDate) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("date").descending());
+        Page<Expense> expensePage;
+
+        // Step 1: Run filtered query first
+        if (category != null && startDate != null && endDate != null) {
+            expensePage = expenseRepository.findByCategoryAndDateBetweenIgnoreCase(category, startDate, endDate, pageable);
+        } else if (category != null) {
+            expensePage = expenseRepository.findByCategoryIgnoreCase(category, pageable);
+        } else if (startDate != null && endDate != null) {
+            expensePage = expenseRepository.findByDateBetween(startDate, endDate, pageable);
+        } else {
+            expensePage = expenseRepository.findAll(pageable);
+        }
+
+        // Step 2: Handle completely empty results
+        if (expensePage.isEmpty()) {
+            if (page == 0) {
+                throw new ResponseStatusException(HttpStatus.NO_CONTENT, "No expenses match the filter criteria");
+            } else {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Page index out of bounds");
+            }
+        }
+
+        // Step 3: Map and return response
         List<ExpenseResponseDto> content = expensePage.getContent()
                 .stream()
                 .map(ExpenseMapper::toDto)

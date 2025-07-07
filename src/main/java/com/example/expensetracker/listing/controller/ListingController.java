@@ -8,8 +8,11 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
 
 @RestController
 @RequestMapping("/api/expenses")
@@ -40,6 +43,30 @@ public class ListingController {
             @RequestParam(defaultValue = "10") int size
     ) {
         PagedResponse<ExpenseResponseDto> response = listingService.getPagedExpense(page, size);
+        return ResponseEntity.ok(response);
+    }
+
+    @Operation(
+            summary = "Get filtered paginated expenses",
+            description = "Fetches a paged list of expenses with optional filters: category, start date, end date. Returns 204 if no data matches."
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Expenses retrieved successfully"),
+            @ApiResponse(responseCode = "204", description = "No expenses found for given filters"),
+            @ApiResponse(responseCode = "400", description = "Invalid query parameter format"),
+            @ApiResponse(responseCode = "404", description = "Requested page is out of bounds")
+    })
+    @GetMapping("/expenses")
+    public ResponseEntity<PagedResponse<ExpenseResponseDto>> getFilteredExpense(
+            @Parameter(description = "Page number (zero-based)") @RequestParam(defaultValue = "0") int page,
+            @Parameter(description = "Number of expenses per page") @RequestParam(defaultValue = "10") int size,
+            @Parameter(description = "Expense category to filter by") @RequestParam(required = false) String category,
+            @Parameter(description = "Start date for filtering (ISO format: yyyy-MM-dd)")
+             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @Parameter(description = "End date for filtering (ISO format: yyyy-MM-dd)")
+             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate
+    ){
+        PagedResponse<ExpenseResponseDto> response = listingService.getFilteredExpenses(page, size, category, startDate, endDate);
         return ResponseEntity.ok(response);
     }
 }
