@@ -1,10 +1,13 @@
 package com.example.expensetracker.listing.controller;
 
 import com.example.expensetracker.expense.dto.ExpenseResponseDto;
+import com.example.expensetracker.listing.dto.ExpenseSummaryDto;
 import com.example.expensetracker.listing.dto.PagedResponse;
 import com.example.expensetracker.listing.service.ListingServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -68,5 +71,15 @@ public class ListingController {
     ){
         PagedResponse<ExpenseResponseDto> response = listingService.getFilteredExpenses(page, size, category, startDate, endDate);
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/summary")
+    @Operation(summary = "Get summary of expenses", description = "Returns total spent, top category, and monthly spending breakdown")
+    @ApiResponse(responseCode = "200", description = "Successfully retrieved expense summary",
+            content = @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = ExpenseSummaryDto.class)))
+    @ApiResponse(responseCode = "204", description = "No expenses found to summarize")
+    public ResponseEntity<ExpenseSummaryDto> getSummary() {
+        return ResponseEntity.ok(listingService.getExpenseSummary());
     }
 }
