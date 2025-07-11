@@ -20,8 +20,8 @@ A modular Spring Boot-based platform evolving from simple expense tracking into 
 ## 🔜 Milestone 1: Data Access & UX Enhancements
 
 - [x] Filtering by category, date range
-- [ ] Pagination using Spring Data `Pageable`
-- [ ] Expense Summarization Endpoint (monthly/category totals)
+- [x] Pagination using Spring Data `Pageable`
+- [x] Expense Summarization Endpoint (monthly/category totals)
 
 ---
 
