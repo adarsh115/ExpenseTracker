@@ -1,106 +1,6 @@
-OpenApi Docs - http://localhost:8080/swagger-ui/index.html#/
-H2 Console - http://localhost:8080/h2-console
-
-Project Structure
-
-expensetracker/
-├── src/
-│   ├── main/
-│   │   ├── java/
-│   │   │   └── com/example/expensetracker/
-│   │   │       ├── config/       # Security, Swagger, Exception handlers
-│   │   │       ├── controller/   # REST endpoints
-│   │   │       ├── dto/          # Request/response objects
-│   │   │       ├── model/        # JPA entities
-│   │   │       ├── repository/   # Spring Data JPA
-│   │   │       ├── service/      # Business logic
-│   │   │       ├── util/         # Fraud detection rules
-│   │   │       └── ExpensetrackerApplication.java
-│   │   └── resources/
-│   │       ├── application.yml   # YAML > properties
-│   │       ├── data.sql          # Initial test data
-│   │       └── schema.sql        # DB schema
-│   └── test/
-│       ├── java/
-│       │   └── com/example/expensetracker/
-│       │       ├── integration/  # @SpringBootTest
-│       │       ├── unit/         # @WebMvcTest, @DataJpaTest
-│       │       └── cucumber/     # BDD tests
-│       └── resources/
-│           └── application-test.yml
-
-Mile Stone
-## 🧱 Project Summary: Expense Tracker API (Spring Boot)
-
-### ✅ Key Accomplishments So Far
-| Area                          | Details |
-|-------------------------------|---------|
-| **Project Type**              | Spring Boot 3.5.3 (Java 21) |
-| **Database**                  | In-memory H2 + Flyway for schema migration |
-| **API Documentation**         | Swagger UI (via `springdoc-openapi-starter-webmvc-ui:2.8.9`) |
-| **Security**                  | Spring Security with in-memory user auth |
-| **Logging**                   | Custom Logback config for clean, timestamped output |
-| **Live Reloading**            | Spring DevTools with IntelliJ auto-rebuild support |
-| **Error Handling**            | `@ControllerAdvice`-based `GlobalExceptionHandler` for clean 404 messages |
-| **DTO Mapping**               | Stateless utility `ExpenseMapper` with static methods |
-| **API Tested So Far**         | `GET /api/expenses/{id}` with not-found fallback |
+Here’s your README, freshly updated with Swagger URL fix, project progress, and clarity across sections—and woven together like the backend deserves 💼📘
 
 ---
-
-## 🧩 Architectural Layers & Flow
-
-### 🌐 API Layer
-- **Controller:** `ExpenseController`
-    - Maps HTTP endpoints like `/api/expenses/{id}`
-    - Returns DTOs, handles input params
-    - Throws `ResourceNotFoundException` if entity not found
-
-### ⚙️ Service Layer
-- **`ExpenseServiceImpl`**
-    - Business logic: fetch data, map to DTOs
-    - Uses `ExpenseRepository` for DB access
-    - Logs key actions (e.g. `Inside getExpenseById`)
-
-### 🧪 Exception Handling
-- **`GlobalExceptionHandler`**
-    - Handles errors like 404 (not found)
-    - Returns clean text message + HTTP code
-
-### 💾 Data Layer
-- **`Expense` Entity**
-    - JPA-managed table with fields: `id`, `title`, `amount`, `category`, `date`
-
-- **`ExpenseRepository`**
-    - Extends `JpaRepository`, exposing basic CRUD
-
-- **Database:**
-    - In-memory H2 (with `/h2-console`)
-    - Table auto-created by Hibernate
-    - No migrations yet, but Flyway is integrated
-
----
-
-## 🔁 Request Lifecycle Flow
-
-1. 🧑 User hits `/api/expenses/10`
-2. 🎯 `ExpenseController` receives ID → delegates to service
-3. 🧠 `ExpenseServiceImpl` fetches from `ExpenseRepository`
-4. ❌ If not found → throws `ResourceNotFoundException`
-5. 🛡️ `GlobalExceptionHandler` catches and formats 404 response
-6. 📋 Swagger UI shows proper API contract and response format
-7. 📜 Logs reflect request, processing, and errors in real time
-
----
-
-From here, you're perfectly positioned to:
-- Add `POST`, `PUT`, and `DELETE` endpoints
-- Seed your H2 with dummy data for testing
-- Enhance logging with trace IDs or log to file
-- Plug in front-end or postman/Scalar-based workflows
-
-Let me know if you’d like a visual diagram or want to version this as a `README.md` summary next. This backend's got some serious swagger 🛠️🔥
--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
 
 # 🧾 Expense Tracker API – Spring Boot Reference Guide
 
@@ -118,30 +18,53 @@ Let me know if you’d like a visual diagram or want to version this as a `READM
 | **H2 (in-memory)**        | Lightweight database for dev/test      |
 | **Hibernate (JPA)**       | ORM for DB operations                  |
 | **Logback**               | Logging framework                      |
+| **Spring Security**       | In-memory authentication               |
 | **SpringDoc OpenAPI**     | Swagger UI for API docs                |
 | **Spring DevTools**       | Live reload and auto-restart support   |
 | **IntelliJ IDEA**         | IDE with auto-build config             |
 
 ---
 
-## 📐 Project Structure & Layered Design
+## 🌐 Local Dev URLs
+
+| Feature       | URL                                                        |
+|---------------|-------------------------------------------------------------|
+| **Swagger UI**| [`http://localhost:8080/swagger-ui/index.html`](http://localhost:8080/swagger-ui/index.html) |
+| **H2 Console**| [`http://localhost:8080/h2-console`](http://localhost:8080/h2-console) |
+
+---
+
+## 📐 Project Structure
 
 ```
-com.example.expensetracker
-├── controller         // Handles HTTP endpoints
-├── dto                // Request and response objects
-├── entity             // JPA entities representing DB tables
-├── exception          // Custom exceptions + global handlers
-├── mapper             // Converts entity ↔ DTO
-├── repository         // JPA Repository interfaces
-├── service            // Business logic
-├── config             // Swagger, DevTools configs (if needed)
-└── application.yml    // Central config file
+expensetracker/
+├── src/
+│   ├── main/
+│   │   ├── java/com/example/expensetracker/
+│   │   │   ├── config/       # Security, Swagger, Exception handlers
+│   │   │   ├── controller/   # REST endpoints
+│   │   │   ├── dto/          # Request/response objects
+│   │   │   ├── model/        # JPA entities
+│   │   │   ├── repository/   # Spring Data JPA
+│   │   │   ├── service/      # Business logic
+│   │   │   ├── util/         # Fraud detection rules
+│   │   │   └── ExpensetrackerApplication.java
+│   │   └── resources/
+│   │       ├── application.yml
+│   │       ├── data.sql
+│   │       └── schema.sql
+│   └── test/
+│       ├── java/com/example/expensetracker/
+│       │   ├── integration/  # @SpringBootTest
+│       │   ├── unit/         # @WebMvcTest, @DataJpaTest
+│       │   └── cucumber/     # BDD tests
+│       └── resources/
+│           └── application-test.yml
 ```
 
 ---
 
-## 🔁 API Call Flow (High-Level)
+## 🔁 API Request Flow
 
 ```text
 Client → Controller → Service → Repository → DB
@@ -153,82 +76,32 @@ Client → Controller → Service → Repository → DB
 
 ---
 
-## 🧠 Spring Boot Concepts (Explained in Detail)
+## ✅ Key Accomplishments So Far
 
-### 1. `@RestController`
-- Combines `@Controller` + `@ResponseBody`
-- Every method returns JSON directly
-
-### 2. `@RequestMapping` & `@GetMapping`, `@PostMapping`, etc.
-- Maps HTTP requests to Java methods
-- Organized under `/api/expenses`
-
-### 3. DTOs
-- Separates input/output from your internal `@Entity`
-- Keeps code safe from accidental data leaks
-
-### 4. JPA + Hibernate
-- Your `Expense` class is annotated with `@Entity`
-- `ExpenseRepository` extends `JpaRepository<Expense, Long>`, giving you:
-  - `findAll()`, `findById()`, `save()`, `deleteById()`, etc.
-
-### 5. Validation (`@Valid`, `@NotBlank`, `@DecimalMin`)
-- Applies constraints to request DTOs
-- Handled via `MethodArgumentNotValidException`
-
-### 6. Global Error Handling: `@RestControllerAdvice`
-- Catches errors app-wide
-- Returns clean JSON with status, timestamp, and error messages
-
-```json
-{
-  "status": 400,
-  "timestamp": "2025-07-01T17:45:00",
-  "errors": ["Title is required", "Amount must be greater than 0"]
-}
-```
-
-### 7. Swagger UI (`springdoc-openapi-starter-webmvc-ui`)
-- Auto-generates docs at: `http://localhost:8080/swagger-ui/index.html`
-- Use `@Operation` and `@ApiResponses` to describe each endpoint
-- Group endpoints with `@Tag`
-
-### 8. Logging with Logback
-- Output includes timestamp, thread, logger, and log level
-- Example:
-  ```
-  2025-07-01 15:55:11 INFO  ExpenseServiceImpl : Inside getExpenseById method for ID: 10
-  ```
-
-### 9. Spring DevTools
-- Hot reloads your app on code changes
-- Just add this to `pom.xml`:
-
-```xml
-<dependency>
-  <groupId>org.springframework.boot</groupId>
-  <artifactId>spring-boot-devtools</artifactId>
-  <scope>runtime</scope>
-</dependency>
-```
-
-**Enable Auto-Build in IntelliJ:**
-- `File → Settings → Compiler → Build project automatically`
-- Also enable: `Advanced Settings → Allow auto-make to start even if app is running`
+| Area                    | Details                                                  |
+|-------------------------|----------------------------------------------------------|
+| **Deployment**          | CI/CD via Render with Docker (multi-stage build)         |
+| **Root Redirect**       | `HomeController` routes `/` → `/swagger-ui/index.html`   |
+| **Error Handling**      | Global 404 fallback with `@ControllerAdvice`             |
+| **DTO Mapping**         | Stateless mapper for clean model-to-response conversion  |
+| **Logging**             | Logback with precise output formatting and timestamps    |
+| **Security**            | In-memory Spring auth (expandable to JWT later)          |
+| **DevTools**            | Auto-reload with IntelliJ                                 |
+| **Data Source**         | H2 DB preloaded via `data.sql` for testing               |
+| **Flyway Migration**    | Ready but not yet applied                                |
 
 ---
 
 ## 🧪 Endpoints Implemented
 
-| HTTP Method | Endpoint               | Description              |
-|-------------|------------------------|--------------------------|
-| `GET`       | `/api/expenses`        | Get all expenses         |
-| `GET`       | `/api/expenses/{id}`   | Get expense by ID        |
-| `POST`      | `/api/expenses`        | Add new expense          |
-| `PUT`       | `/api/expenses/{id}`   | Update expense           |
+| Method | Endpoint                 | Action             |
+|--------|--------------------------|--------------------|
+| `GET`  | `/api/expenses`          | List all expenses  |
+| `GET`  | `/api/expenses/{id}`     | Get by ID          |
+| `POST` | `/api/expenses`          | Add new expense    |
+| `PUT`  | `/api/expenses/{id}`     | Update expense     |
 
-Example payload for POST:
-
+Example `POST` body:
 ```json
 {
   "title": "Lunch",
@@ -240,12 +113,35 @@ Example payload for POST:
 
 ---
 
-## 🌐 Future Enhancements
+## 🧠 Core Spring Boot Concepts
 
-- `DELETE /api/expenses/{id}`
-- Filtering by category, date, etc.
-- Security using Spring Security + JWT
-- Dockerized deployment
-- Integration + unit tests with `@SpringBootTest` and Mockito
+- `@RestController`: Combines response body with controller
+- `@RequestMapping` / `@GetMapping`: Endpoint exposure
+- `@Entity`: Marks DB model
+- `@Repository`: Auto CRUD with JPA
+- `@ControllerAdvice`: Centralized error handling
+- `@Valid`: Request validation with Bean Validation annotations
 
 ---
+
+## 📋 Swagger UI Customizations
+
+- `@Operation`: Describes endpoint
+- `@ApiResponses`: Maps 200/400/404 cases
+- `@Tag`: Logical grouping
+- Auto-generated docs with `springdoc-openapi-starter-webmvc-ui`
+
+---
+
+## 🔮 Next Steps
+
+- Add `DELETE /api/expenses/{id}`
+- Enable filtering by `category`, `date`, etc.
+- Add pagination
+- Integrate JWT auth
+- Expand Flyway for DB versioning
+- Write integration + BDD tests
+
+---
+
+Let me know if you’d like me to version this, scaffold new endpoints, or generate a Markdown-compatible version for GitHub `README.md`. This backend’s ready to fly 🚀🛠️
