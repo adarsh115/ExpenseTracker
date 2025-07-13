@@ -1,0 +1,69 @@
+name: CI_CD Pipeline
+
+on:
+  push:
+    branches:
+      - bolt
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: '21'
+
+      - name: Build with Maven
+        run: mvn clean package
+
+      - name: Docker Build
+        run: docker build -t expense-tracker .
+
+      - name: Health Check (Render)
+        run: curl -f https://adarsh-expensetracker.onrender.com/actuator/health
+
+      - name: Check pagination with filters
+        run: curl -f https://adarsh-expensetracker.onrender.com/api/expenses?page=0
+
+      - name: Notify on Success via SendGrid
+        if: success()
+        run: |
+          curl --request POST \
+            --url https://api.sendgrid.com/v3/mail/send \
+            --header "Authorization: Bearer ${{ secrets.SENDGRID_API_KEY }}" \
+            --header "Content-Type: application/json" \
+            --data '{
+              "personalizations": [{
+                "to": [{ "email": "'"${{ secrets.EMAIL_RECIPIENT }}"'" }],
+                "subject": "✅ Expense Tracker Deployment Successful"
+              }],
+              "from": { "email": "'"${{ secrets.EMAIL_SENDER }}"'" },
+              "content": [{
+                "type": "text/plain",
+                "value": "Your CI/CD pipeline just completed successfully. Expense Tracker is live and healthy! 🚀"
+              }]
+            }'
+
+      - name: Notify on Failure via SendGrid
+        if: failure()
+        run: |
+          curl --request POST \
+            --url https://api.sendgrid.com/v3/mail/send \
+            --header "Authorization: Bearer ${{ secrets.SENDGRID_API_KEY }}" \
+            --header "Content-Type: application/json" \
+            --data '{
+              "personalizations": [{
+                "to": [{ "email": "'"${{ secrets.EMAIL_RECIPIENT }}"'" }],
+                "subject": "❌ Expense Tracker Deployment Failed"
+              }],
+              "from": { "email": "'"${{ secrets.EMAIL_SENDER }}"'" },
+              "content": [{
+                "type": "text/plain",
+                "value": "Something went wrong during the deployment. Check the GitHub Actions logs for details."
+              }]
+            }'
