@@ -10,9 +10,11 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -20,6 +22,9 @@ import java.time.LocalDate;
 @RestController
 @RequestMapping("/api/expenses")
 @Tag(name = "Expense Listing", description = "Endpoint for viewing paginated expenses")
+//@PreAuthorize("hasRole('ADMIN')")
+//@SecurityRequirement(name = "bearerAuth")
+
 public class ListingController {
 
     private final ListingServiceImpl listingService;
